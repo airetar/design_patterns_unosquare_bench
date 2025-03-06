@@ -15,70 +15,82 @@ import { COLORS } from '../helpers/colors.ts';
 
 // 1. Interfaz PaymentProcessor
 interface PaymentProcessor {
-  processPayment(amount: number): void;
+    processPayment(amount: number): void;
 }
 
 // 2. Clases de Servicios de Pago Externos
 // Estas clases simulan los servicios externos de PayPal, Stripe y MercadoPago
 
 class PayPalService {
-  sendPayment(amount: number): void {
-    console.log(`Procesando pago de $${amount} con %cPayPal`, COLORS.blue);
-  }
+    sendPayment(amount: number): void {
+        console.log(`Procesando pago de $${amount} con %cPayPal`, COLORS.blue);
+    }
 }
 
 class StripeService {
-  makeCharge(amount: number): void {
-    console.log(`Procesando pago de $${amount} con %cStripe`, COLORS.purple);
-  }
+    makeCharge(amount: number): void {
+        console.log(`Procesando pago de $${amount} con %cStripe`, COLORS.purple);
+    }
 }
 
 class MercadoPagoService {
-  pay(amount: number): void {
-    console.log(
-      `Procesando pago de $${amount} con %cMercadoPago`,
-      COLORS.yellow
-    );
-  }
+    pay(amount: number): void {
+        console.log(
+            `Procesando pago de $${amount} con %cMercadoPago`,
+            COLORS.yellow
+        );
+    }
 }
 
 // 3. Clases Adaptadoras
 
 // Adaptador para PayPal
-class PayPalAdapter {
-  // TODO: Implementar la interfaz PaymentProcessor
+class PayPalAdapter implements PaymentProcessor {
+    // TODO: Implementar la interfaz PaymentProcessor
+    private payPalService = new PayPalService();
+    processPayment(amount: number): void {
+        this.payPalService.sendPayment(amount);
+    }
 }
 
 // Adaptador para Stripe
-class StripeAdapter {
-  // TODO: Implementar la interfaz PaymentProcessor
+class StripeAdapter implements PaymentProcessor {
+    // TODO: Implementar la interfaz PaymentProcessor
+    private stripeService = new StripeService();
+    processPayment(amount: number): void {
+        this.stripeService.makeCharge(amount);
+    }
+
 }
 
 // Adaptador para MercadoPago
-class MercadoPagoAdapter {
-  // TODO: Implementar la interfaz PaymentProcessor
+class MercadoPagoAdapter implements PaymentProcessor {
+    private mercadoPService = new MercadoPagoService();
+    processPayment(amount: number): void {
+        this.mercadoPService.pay(amount);
+    }
 }
 
 // 4. Código Cliente para probar el Adapter
 
 function main() {
-  const paymentAmount = 100;
+    const paymentAmount = 100;
 
-  // TODO: Agregar los adaptadores para los servicios de pago
-  const paypalProcessor: PaymentProcessor = new PayPalAdapter();
-  const stripeProcessor: PaymentProcessor = new StripeAdapter();
-  const mercadoPagoProcessor: PaymentProcessor = new MercadoPagoAdapter();
+    // TODO: Agregar los adaptadores para los servicios de pago
+    const paypalProcessor: PaymentProcessor = new PayPalAdapter();
+    const stripeProcessor: PaymentProcessor = new StripeAdapter();
+    const mercadoPagoProcessor: PaymentProcessor = new MercadoPagoAdapter();
 
-  // Procesar pagos con los diferentes servicios
-  // Los 3 procesadores de pago trabajan exactamente igual después de adaptaros
-  console.log('Usando PayPal:');
-  paypalProcessor.processPayment(paymentAmount);
+    // Procesar pagos con los diferentes servicios
+    // Los 3 procesadores de pago trabajan exactamente igual después de adaptaros
+    console.log('Usando PayPal:');
+    paypalProcessor.processPayment(paymentAmount);
 
-  console.log('\nUsando Stripe:');
-  stripeProcessor.processPayment(paymentAmount);
+    console.log('\nUsando Stripe:');
+    stripeProcessor.processPayment(paymentAmount);
 
-  console.log('\nUsando MercadoPago:');
-  mercadoPagoProcessor.processPayment(paymentAmount);
+    console.log('\nUsando MercadoPago:');
+    mercadoPagoProcessor.processPayment(paymentAmount);
 }
 
 main();

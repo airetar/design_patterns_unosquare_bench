@@ -10,3 +10,12 @@
  *
  * https://refactoring.guru/es/design-patterns/adapter
  */
+
+import { LoggerAdapter } from "./adapter-files/logger-adapter.ts";
+
+
+const logger = new LoggerAdapter('01-adapter.ts');
+
+logger.writeLog('Log Normal');
+logger.writeError('Error!');
+logger.writeWarning('Warning!');
